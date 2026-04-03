@@ -132,7 +132,7 @@ PatientCare Agent 主要面向以下医疗服务场景：
 
 推荐使用 `conda`：
 
-```powershell
+```bash
 conda --no-plugins create --solver=classic -n patientcare-agent-dev python=3.12 -y
 conda activate patientcare-agent-dev
 ```
@@ -141,14 +141,14 @@ conda activate patientcare-agent-dev
 
 ### 2. 安装后端依赖
 
-```powershell
+```bash
 pip install -r requirements.txt
 ```
 
 ### 3. 配置环境变量
 
-```powershell
-Copy-Item .env.example .env
+```bash
+cp .env.example .env
 ```
 
 然后编辑 `.env`：
@@ -166,15 +166,15 @@ QWEN_EMBEDDING_DIMENSIONS="1024"
 
 ### 4. 安装前端依赖
 
-```powershell
-Set-Location frontend
+```bash
+cd frontend
 npm install
-Set-Location ..
+cd ..
 ```
 
 ### 5. 启动后端服务
 
-```powershell
+```bash
 python -m uvicorn app.main:app --reload
 ```
 
@@ -187,8 +187,8 @@ python -m uvicorn app.main:app --reload
 
 打开另一个终端窗口：
 
-```powershell
-Set-Location frontend
+```bash
+cd frontend
 npm run dev
 ```
 
@@ -202,10 +202,10 @@ npm run dev
 
 如果你希望由 FastAPI 直接托管前端构建产物，可以先执行：
 
-```powershell
-Set-Location frontend
+```bash
+cd frontend
 npm run build
-Set-Location ..
+cd ..
 python -m uvicorn app.main:app --reload
 ```
 
@@ -223,7 +223,7 @@ python -m uvicorn app.main:app --reload
 
 如需导入演示数据，可执行：
 
-```powershell
+```bash
 sqlite3 data/patient_agent.db < scripts/seed_demo_data.sql
 ```
 
@@ -233,13 +233,13 @@ sqlite3 data/patient_agent.db < scripts/seed_demo_data.sql
 
 项目中提供了一个简单脚本，用于直接测试 Agent：
 
-```powershell
+```bash
 python scripts/test_qwen_agent.py "Summarize the latest visit for patient P1001"
 ```
 
 如果需要带图片测试：
 
-```powershell
+```bash
 python scripts/test_qwen_agent.py "Please analyze this image" --image-file data\\example.png
 ```
 
