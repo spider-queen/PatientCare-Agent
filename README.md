@@ -1,36 +1,36 @@
 # PatientCare Agent
 
-A full-stack medical assistant project for patient service scenarios.
+一个面向患者服务场景的全栈智能助手项目。
 
-It combines a FastAPI backend, a React workspace UI, Qwen-based tool calling, patient data management, multimodal input, and short-term / long-term memory retrieval into one runnable project.
+该项目将 FastAPI 后端、React 工作台前端、基于 Qwen 的智能问答、患者数据管理、多模态输入，以及短期 / 长期记忆检索整合到一个可运行的示例系统中。
 
-## Overview
+## 项目简介
 
-PatientCare Agent is designed for healthcare support workflows such as:
+PatientCare Agent 主要面向以下医疗服务场景：
 
-- patient identity verification
-- patient profile, case, and visit record lookup
-- multimodal question answering with image input
-- short-term conversation memory
-- long-term memory extraction and retrieval
-- a web workspace for patient-centric interaction
+- 患者身份核验
+- 患者档案、病例和就诊记录查询
+- 支持图片输入的多模态问答
+- 短期对话记忆管理
+- 长期记忆提取与检索
+- 面向患者服务流程的 Web 工作台
 
-The current version focuses on a local demo / interview-style implementation rather than a production-ready hospital system.
+当前版本更偏向本地演示和项目展示用途，尚未达到生产环境可直接部署的医疗系统标准。
 
-## Features
+## 核心功能
 
-- Qwen-powered agent entrypoint via `POST /api/agent/query`
-- patient lookup by patient code, phone, and identity-related fields
-- structured CRUD APIs for patients, medical cases, and visit records
-- long-term memory profile, key event extraction, and hybrid retrieval
-- React workspace UI for patient overview, chat, visit summary, and memory panel
-- image upload support for multimodal queries
-- SQLite-based local persistence
-- FAISS-based vector index for memory retrieval
+- 通过 `POST /api/agent/query` 提供基于 Qwen 的智能问答入口
+- 支持通过患者编号、手机号等信息进行患者查询
+- 提供患者、病例、就诊记录的结构化 CRUD 接口
+- 支持长期记忆画像、关键事件提取与混合检索
+- 提供 React 工作台界面，用于患者概览、聊天、就诊摘要和记忆展示
+- 支持图片上传，进行多模态问答
+- 使用 SQLite 进行本地数据持久化
+- 使用 FAISS 进行长期记忆向量检索
 
-## Tech Stack
+## 技术栈
 
-### Backend
+### 后端
 
 - Python 3.12
 - FastAPI
@@ -38,9 +38,9 @@ The current version focuses on a local demo / interview-style implementation rat
 - Pydantic v2
 - SQLite
 - FAISS
-- OpenAI-compatible SDK calling Qwen / DashScope
+- OpenAI 兼容 SDK 调用 Qwen / DashScope
 
-### Frontend
+### 前端
 
 - React 18
 - Vite
@@ -49,44 +49,44 @@ The current version focuses on a local demo / interview-style implementation rat
 - TanStack Query
 - Zustand
 
-## Architecture
+## 架构说明
 
-The project is organized around four main layers:
+整个项目可以分为四个主要层次：
 
-1. API layer  
-   FastAPI routes expose agent, dashboard, patient, visit record, and memory endpoints.
+1. API 层  
+   使用 FastAPI 暴露 Agent、Dashboard、Patients、Visit Records 和 Memory 等接口。
 
-2. Agent layer  
-   `QwenMCPAgent` orchestrates LLM reasoning, tool calls, multimodal input, and memory context injection.
+2. Agent 层  
+   由 `QwenMCPAgent` 负责组织大模型推理、工具调用、多模态输入处理以及记忆上下文注入。
 
-3. Data and memory layer  
-   SQLite stores structured business data and conversation records, while FAISS supports vector retrieval for long-term memory events.
+3. 数据与记忆层  
+   使用 SQLite 存储结构化业务数据和对话记录，使用 FAISS 支持长期记忆事件的向量检索。
 
-4. Frontend workspace layer  
-   A React app provides a patient-centered workspace with chat, patient overview, visit summary, and memory views.
+4. 前端工作台层  
+   使用 React 构建患者工作台，展示患者概览、聊天记录、最近就诊摘要和长期记忆信息。
 
-## Project Structure
+## 项目结构
 
 ```text
 .
-|-- app/                    # FastAPI app, routes, services, db, llm integration
-|   |-- api/routes/         # API route definitions
-|   |-- db/                 # SQLAlchemy models, session, DB init
-|   |-- llm/                # Qwen client and agent orchestration
-|   |-- schemas/            # Pydantic schemas
-|   `-- services/           # Business services and memory logic
-|-- data/                   # Local SQLite DB, uploaded media, FAISS index files
-|-- docs/                   # PRD and architecture notes
-|-- frontend/               # React + Vite frontend
+|-- app/                    # FastAPI 应用、路由、服务、数据库、LLM 集成
+|   |-- api/routes/         # API 路由定义
+|   |-- db/                 # SQLAlchemy 模型、数据库会话、初始化逻辑
+|   |-- llm/                # Qwen 客户端与 Agent 编排逻辑
+|   |-- schemas/            # Pydantic 数据模型
+|   `-- services/           # 业务服务与记忆处理逻辑
+|-- data/                   # 本地 SQLite 数据、上传媒体、FAISS 索引文件
+|-- docs/                   # PRD 与架构说明文档
+|-- frontend/               # React + Vite 前端工程
 |   |-- src/
 |   `-- package.json
-|-- scripts/                # Demo data and local test scripts
-|-- .env.example            # Environment variable template
+|-- scripts/                # 演示数据与本地测试脚本
+|-- .env.example            # 环境变量模板
 |-- README.md
 `-- requirements.txt
 ```
 
-## Core API Endpoints
+## 主要接口
 
 ### Agent
 
@@ -109,7 +109,7 @@ The project is organized around four main layers:
 - `POST /api/memory/search/events`
 - `GET /api/memory/profile`
 
-### Patient Data
+### 患者数据
 
 - `POST /api/patients`
 - `GET /api/patients`
@@ -124,34 +124,34 @@ The project is organized around four main layers:
 - `GET /api/visit-records/{visit_record_id}`
 - `PUT /api/visit-records/{visit_record_id}`
 
-## Quick Start
+## 快速开始
 
-Run all commands from the repository root `PatientCare-Agent/` unless noted otherwise.
+除特别说明外，以下命令均在仓库根目录 `PatientCare-Agent/` 下执行。
 
-### 1. Create a Python environment
+### 1. 创建 Python 环境
 
-Using `conda`:
+推荐使用 `conda`：
 
 ```powershell
 conda --no-plugins create --solver=classic -n patientcare-agent-dev python=3.12 -y
 conda activate patientcare-agent-dev
 ```
 
-Or with your preferred Python virtual environment tool.
+当然，你也可以使用自己习惯的虚拟环境工具。
 
-### 2. Install backend dependencies
+### 2. 安装后端依赖
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-### 3. Configure environment variables
+### 3. 配置环境变量
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Edit `.env`:
+然后编辑 `.env`：
 
 ```env
 QWEN_API_KEY="your_qwen_api_key"
@@ -160,11 +160,11 @@ QWEN_EMBEDDING_MODEL="text-embedding-v4"
 QWEN_EMBEDDING_DIMENSIONS="1024"
 ```
 
-Optional:
+可选配置：
 
-- `QWEN_BASE_URL` if you want to override the default DashScope-compatible endpoint
+- `QWEN_BASE_URL`：如果你需要覆盖默认的 DashScope 兼容接口地址，可以额外配置这个变量
 
-### 4. Install frontend dependencies
+### 4. 安装前端依赖
 
 ```powershell
 Set-Location frontend
@@ -172,35 +172,35 @@ npm install
 Set-Location ..
 ```
 
-### 5. Start the backend
+### 5. 启动后端服务
 
 ```powershell
 python -m uvicorn app.main:app --reload
 ```
 
-Backend URLs:
+启动后可访问：
 
-- API docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- Health check: [http://127.0.0.1:8000/api/health](http://127.0.0.1:8000/api/health)
+- API 文档：[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- 健康检查：[http://127.0.0.1:8000/api/health](http://127.0.0.1:8000/api/health)
 
-### 6. Start the frontend
+### 6. 启动前端服务
 
-Open another terminal:
+打开另一个终端窗口：
 
 ```powershell
 Set-Location frontend
 npm run dev
 ```
 
-Frontend URL:
+前端地址：
 
-- Workspace: [http://127.0.0.1:5173](http://127.0.0.1:5173)
+- 工作台：[http://127.0.0.1:5173](http://127.0.0.1:5173)
 
-The Vite dev server proxies `/api` and `/media` requests to `http://127.0.0.1:8000`.
+开发环境下，Vite 会将 `/api` 和 `/media` 请求代理到 `http://127.0.0.1:8000`。
 
-## Build for Local Preview
+## 本地构建预览
 
-You can also build the frontend and let FastAPI serve the compiled assets:
+如果你希望由 FastAPI 直接托管前端构建产物，可以先执行：
 
 ```powershell
 Set-Location frontend
@@ -209,43 +209,43 @@ Set-Location ..
 python -m uvicorn app.main:app --reload
 ```
 
-Then open:
+然后访问：
 
 - [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-`app.main` will serve `frontend/dist` automatically when it exists.
+当 `frontend/dist` 存在时，`app.main` 会自动优先托管前端构建后的静态资源。
 
-## Demo Data
+## 演示数据
 
-The project uses a local SQLite database at:
+项目默认使用本地 SQLite 数据库，路径为：
 
 - `data/patient_agent.db`
 
-To import demo data:
+如需导入演示数据，可执行：
 
 ```powershell
 sqlite3 data/patient_agent.db < scripts/seed_demo_data.sql
 ```
 
-If `sqlite3` is not available on your machine, you can import the SQL file with any SQLite GUI tool.
+如果本机没有安装 `sqlite3`，也可以使用任意 SQLite 可视化工具导入该 SQL 文件。
 
-## Local Testing
+## 本地测试
 
-There is a simple test script for exercising the agent directly:
+项目中提供了一个简单脚本，用于直接测试 Agent：
 
 ```powershell
 python scripts/test_qwen_agent.py "Summarize the latest visit for patient P1001"
 ```
 
-With an image:
+如果需要带图片测试：
 
 ```powershell
 python scripts/test_qwen_agent.py "Please analyze this image" --image-file data\\example.png
 ```
 
-## Notes for Open Source Publishing
+## 开源发布说明
 
-Before publishing this project to GitHub, it is recommended to avoid committing:
+如果你准备将该项目发布到 GitHub，建议不要提交以下内容：
 
 - `.env`
 - `frontend/node_modules/`
@@ -253,31 +253,31 @@ Before publishing this project to GitHub, it is recommended to avoid committing:
 - `data/*.db`
 - `data/faiss/`
 - `__pycache__/`
-- IDE and OS-specific files
+- IDE 配置文件和系统杂项文件
 
-This repository now includes a `.gitignore` for those items.
+项目中已经提供了 `.gitignore`，用于忽略这些本地文件。
 
-## Suggested Repository Name
+## 推荐仓库名
 
-If you want a short and clear English repository name, use:
+如果你希望使用简洁清晰的英文仓库名，推荐：
 
 - `patientcare-agent`
 
-It matches the current project terminology, is easy to understand, and works well as a GitHub repository name.
+这个命名和项目当前定位一致，也适合在 GitHub 上展示和传播。
 
-## Current Limitations
+## 当前限制
 
-- no authentication or authorization system yet
-- no production deployment configuration
-- no formal automated backend/frontend test suite yet
-- local SQLite and FAISS storage are aimed at demo usage
-- medical safety, privacy, and compliance controls are not production-complete
+- 暂未实现登录与权限控制
+- 暂未提供生产环境部署配置
+- 暂未建立完整的自动化测试体系
+- 当前 SQLite 与 FAISS 存储更适合本地演示场景
+- 医疗安全、隐私合规与审计能力尚未达到生产标准
 
-## License
+## 许可证
 
-No license file is currently included.
+当前仓库还没有包含 `LICENSE` 文件。
 
-If you plan to open source the project publicly, consider adding one of these:
+如果你计划公开开源，建议补充一个许可证文件。常见选择包括：
 
 - MIT License
 - Apache-2.0
