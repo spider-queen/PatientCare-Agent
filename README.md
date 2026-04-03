@@ -234,51 +234,15 @@ sqlite3 data/patient_agent.db < scripts/seed_demo_data.sql
 项目中提供了一个简单脚本，用于直接测试 Agent：
 
 ```bash
-python scripts/test_qwen_agent.py "Summarize the latest visit for patient P1001"
+python scripts/test_qwen_agent.py "请总结患者 P1001 最近一次就诊记录"
 ```
 
-如果需要带图片测试：
+如果需要结合图片进行测试：
 
 ```bash
-python scripts/test_qwen_agent.py "Please analyze this image" --image-file data\\example.png
+python scripts/test_qwen_agent.py "请分析这张图片中的检查信息" --image-file data/example.png
 ```
-
-## 开源发布说明
-
-如果你准备将该项目发布到 GitHub，建议不要提交以下内容：
-
-- `.env`
-- `frontend/node_modules/`
-- `frontend/dist/`
-- `data/*.db`
-- `data/faiss/`
-- `__pycache__/`
-- IDE 配置文件和系统杂项文件
-
-项目中已经提供了 `.gitignore`，用于忽略这些本地文件。
-
-## 推荐仓库名
-
-如果你希望使用简洁清晰的英文仓库名，推荐：
-
-- `patientcare-agent`
-
-这个命名和项目当前定位一致，也适合在 GitHub 上展示和传播。
-
-## 当前限制
-
-- 暂未实现登录与权限控制
-- 暂未提供生产环境部署配置
-- 暂未建立完整的自动化测试体系
-- 当前 SQLite 与 FAISS 存储更适合本地演示场景
-- 医疗安全、隐私合规与审计能力尚未达到生产标准
 
 ## 许可证
 
-当前仓库还没有包含 `LICENSE` 文件。
-
-如果你计划公开开源，建议补充一个许可证文件。常见选择包括：
-
-- MIT License
-- Apache-2.0
-- GPL-3.0
+本项目采用 MIT License。你可以自由使用、修改和分发代码，但需保留原始许可证声明。
