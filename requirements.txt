@@ -1,0 +1,11 @@
+# 作者：小红书@人间清醒的李某人
+
+fastapi==0.115.0
+uvicorn==0.30.6
+sqlalchemy==2.0.35
+pydantic==2.9.2
+numpy<2
+mcp>=1.0.0,<2.0.0
+openai>=1.0.0,<2.0.0
+faiss-cpu==1.8.0
+packaging>=24.0,<27.0
