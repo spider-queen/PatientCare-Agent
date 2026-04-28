@@ -1,5 +1,3 @@
-# 作者：小红书@人间清醒的李某人
-
 from typing import Optional
 
 try:
@@ -15,7 +13,6 @@ from app.services import mcp_tool_service
 
 
 mcp = FastMCP("patient-agent-mcp-server")
-
 
 @mcp.tool()
 def verify_patient_identity(
@@ -78,7 +75,6 @@ def get_patient_medical_cases(
     finally:
         db.close()
 
-
 @mcp.tool()
 def get_patient_visit_records(
     patient_id: Optional[int] = None,
@@ -100,6 +96,55 @@ def get_patient_visit_records(
         )
     finally:
         db.close()
+
+
+@mcp.tool()
+def get_follow_up_plans(
+    patient_id: Optional[int] = None,
+    patient_code: Optional[str] = None,
+    status: Optional[str] = None,
+) -> dict:
+    """
+    查询患者诊后随访计划。主链路使用 Function Tools / Tool Calling，
+    该 MCP 入口仅作为可选适配层。
+    """
+    db = SessionLocal()
+    try:
+        return mcp_tool_service.get_follow_up_plans(
+            db,
+            patient_id=patient_id,
+            patient_code=patient_code,
+            status=status,
+        )
+    finally:
+        db.close()
+
+
+@mcp.tool()
+def get_medication_reminders(
+    patient_id: Optional[int] = None,
+    patient_code: Optional[str] = None,
+) -> dict:
+    """
+    查询患者用药提醒。访问私有数据前应先完成身份验权。
+    """
+    db = SessionLocal()
+    try:
+        return mcp_tool_service.get_medication_reminders(
+            db,
+            patient_id=patient_id,
+            patient_code=patient_code,
+        )
+    finally:
+        db.close()
+
+
+@mcp.tool()
+def assess_follow_up_risk(query: str) -> dict:
+    """
+    基于规则识别诊后随访风险提示，不替代医生诊断。
+    """
+    return mcp_tool_service.assess_follow_up_risk(query=query)
 
 
 if __name__ == "__main__":

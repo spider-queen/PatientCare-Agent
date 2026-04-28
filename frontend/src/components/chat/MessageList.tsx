@@ -184,12 +184,157 @@ function renderToolSummary(message: ChatMessage): ReactNode {
   return (
     <details className="mt-5 rounded-3xl border border-slate-200 bg-slate-50 p-4">
       <summary className="cursor-pointer text-sm font-medium text-slate-700">
-        查看工具调用结果
+        工具调用明细
       </summary>
       <pre className="mt-3 overflow-x-auto whitespace-pre-wrap text-xs leading-6 text-slate-700">
         {JSON.stringify(message.toolOutputs, null, 2)}
       </pre>
     </details>
+  );
+}
+
+const INTENT_LABELS: Record<string, string> = {
+  health_general: "健康咨询",
+  patient_record_query: "患者记录查询",
+  latest_visit: "最近就诊",
+  medical_followup: "诊后随访",
+  urgent: "紧急风险",
+  smalltalk: "功能说明",
+  out_of_domain: "越界问题",
+  patient_profile: "患者概览",
+  medical_case: "病历摘要",
+  follow_up_plan: "随访计划",
+  medication_reminder: "用药提醒",
+  image_review: "图片复核"
+};
+
+const ROUTE_LABELS: Record<string, string> = {
+  template: "模板回复",
+  risk_guard: "风险拦截",
+  semantic_cache: "证据缓存",
+  tool_direct: "工具直达",
+  agent_loop: "完整 Agent Loop"
+};
+
+const TOOL_LABELS: Record<string, string> = {
+  get_patient_profile: "患者概览查询",
+  get_patient_medical_cases: "病历记录查询",
+  get_patient_visit_records: "就诊记录查询",
+  get_follow_up_plans: "随访计划查询",
+  get_medication_reminders: "用药提醒查询",
+  assess_follow_up_risk: "随访风险评估",
+  clinician_access_check: "医护访问检查"
+};
+
+const SOURCE_LABELS: Record<string, string> = {
+  patients: "患者资料",
+  medical_cases: "病历记录",
+  visit_records: "就诊记录",
+  follow_up_plans: "随访计划",
+  medication_reminders: "用药提醒",
+  rule_based_follow_up_risk: "规则风险评估"
+};
+
+function labelFor(value: unknown, labels: Record<string, string>, fallback: string) {
+  if (typeof value !== "string" || !value) {
+    return fallback;
+  }
+  return labels[value] ?? value;
+}
+
+function formatRouteReason(value?: string | null) {
+  if (!value) {
+    return "";
+  }
+  return value
+    .replace("rule_latest_visit_adaptive", "命中最近就诊规则")
+    .replace("rule_patient_profile_adaptive", "命中患者概览规则")
+    .replace("rule_medical_case_adaptive", "命中病历摘要规则")
+    .replace("rule_follow_up_plan_adaptive", "命中随访计划规则")
+    .replace("rule_medication_reminder_adaptive", "命中用药提醒规则")
+    .replace("fresh semantic evidence cache hit", "证据缓存新鲜且语义匹配")
+    .replace("structured tool direct route", "结构化工具直达")
+    .replace("cache_miss=evidence_source_version_changed", "证据源已更新，重新查工具")
+    .replace("cache_miss=semantic_similarity_below_threshold", "缓存语义相似度不足")
+    .replace("clinician_access_check_failed", "缺少有效医护随访患者上下文")
+    .replace("deterministic_guard_smalltalk", "命中功能说明模板")
+    .replace("deterministic_guard_out_of_domain", "命中服务边界模板")
+    .replace("risk_guard_matched_before_cache_or_tools", "风险规则优先拦截");
+}
+
+function renderEvidenceSummary(item: Record<string, unknown>) {
+  const source = labelFor(item.source, SOURCE_LABELS, "结构化证据");
+  const tool = labelFor(item.tool_name, TOOL_LABELS, "工具证据");
+  const count = typeof item.count === "number" ? `${item.count} 条` : null;
+  const triggerTerms = Array.isArray(item.trigger_terms)
+    ? item.trigger_terms.join("、")
+    : null;
+  return [source, tool, count, triggerTerms ? `触发词：${triggerTerms}` : null]
+    .filter(Boolean)
+    .join(" · ");
+}
+
+function renderAgentMetadata(message: ChatMessage): ReactNode {
+  if (
+    !message.intent &&
+    !message.routeType &&
+    !message.riskLevel &&
+    !message.recommendedAction &&
+    (!message.evidence || message.evidence.length === 0)
+  ) {
+    return null;
+  }
+
+  return (
+    <div className="mt-5 grid gap-3 rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-700">
+      <div className="flex flex-wrap gap-2">
+        {message.intent ? (
+          <span className="rounded-full bg-white px-3 py-1 text-xs text-slate-600 ring-1 ring-slate-200">
+            {labelFor(message.intent, INTENT_LABELS, "未分类")}
+          </span>
+        ) : null}
+        {message.routeType ? (
+          <span className="rounded-full bg-white px-3 py-1 text-xs text-slate-600 ring-1 ring-slate-200">
+            {labelFor(message.routeType, ROUTE_LABELS, "路由")}
+          </span>
+        ) : null}
+        {typeof message.intentConfidence === "number" ? (
+          <span className="rounded-full bg-white px-3 py-1 text-xs text-slate-600 ring-1 ring-slate-200">
+            置信度 {(message.intentConfidence * 100).toFixed(0)}%
+          </span>
+        ) : null}
+        {message.cacheHit ? (
+          <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs text-emerald-700 ring-1 ring-emerald-200">
+            缓存命中
+          </span>
+        ) : null}
+        {message.riskLevel ? (
+          <span className="rounded-full bg-rose-50 px-3 py-1 text-xs text-rose-700 ring-1 ring-rose-200">
+            风险 {message.riskLevel}
+          </span>
+        ) : null}
+      </div>
+      {message.routeReason ? (
+        <p className="text-xs leading-6 text-slate-500">
+          路由原因：{formatRouteReason(message.routeReason)}
+        </p>
+      ) : null}
+      {message.recommendedAction ? (
+        <p className="leading-7 text-rose-700">{message.recommendedAction}</p>
+      ) : null}
+      {message.evidence && message.evidence.length > 0 ? (
+        <div className="grid gap-2">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
+            证据来源
+          </p>
+          {message.evidence.slice(0, 3).map((item, index) => (
+            <div key={`evidence-${index}`} className="text-xs leading-6 text-slate-600">
+              {renderEvidenceSummary(item)}
+            </div>
+          ))}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -263,6 +408,7 @@ export function MessageList({
                 />
               ) : null}
 
+              {renderAgentMetadata(message)}
               {renderToolSummary(message)}
             </div>
           </article>

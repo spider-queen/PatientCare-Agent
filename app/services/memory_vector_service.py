@@ -154,6 +154,10 @@ def search_memory_events(
     return rows
 
 
+def embed_query(text: str) -> list[float]:
+    return _embed_query(text)
+
+
 def _rebuild_index(
     patient_id: int,
     metadata: list[dict[str, Any]],

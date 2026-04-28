@@ -4,12 +4,18 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.schemas.dashboard import PatientOverviewResponse
+from app.schemas.dashboard import AgentOpsOverviewResponse, PatientOverviewResponse
 from app.schemas.memory import MemoryEventRead, UserProfileRead
 from app.schemas.memory_preference import MemoryPreferenceRead
 from app.schemas.patient import PatientRead
 from app.schemas.visit_record import VisitRecordRead
-from app.services import memory_preference_service, memory_service, patient_service, visit_record_service
+from app.services import (
+    agent_metrics_service,
+    memory_preference_service,
+    memory_service,
+    patient_service,
+    visit_record_service,
+)
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
@@ -79,3 +85,24 @@ def get_patient_overview(
         ],
     )
 
+
+@router.get(
+    "/agent-ops",
+    response_model=AgentOpsOverviewResponse,
+    summary="Get aggregate agent operations metrics.",
+    description=(
+        "Returns recent aggregate KPIs for the patient-support agent, including "
+        "latency percentiles, fast-path hit rate, verification rate, and recent runs."
+    ),
+)
+def get_agent_ops_overview(
+    limit: int = Query(default=50, ge=5, le=500),
+    recent_limit: int = Query(default=5, ge=1, le=20),
+    db: Session = Depends(get_db),
+) -> AgentOpsOverviewResponse:
+    overview = agent_metrics_service.get_agent_ops_overview(
+        db,
+        limit=limit,
+        recent_limit=recent_limit,
+    )
+    return AgentOpsOverviewResponse(**overview)

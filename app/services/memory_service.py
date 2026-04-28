@@ -93,9 +93,18 @@ def get_relevant_memory_events(
     query: str,
     limit: int = 5,
 ) -> list[MemoryEvent]:
-    _ensure_business_memory_events(db, patient_id)
-    results = search_memory_events(db, patient_id, query, top_n=limit)
+    results = get_relevant_memory_search_results(db, patient_id, query, limit=limit)
     return [item["event"] for item in results]
+
+
+def get_relevant_memory_search_results(
+    db: Session,
+    patient_id: int,
+    query: str,
+    limit: int = 5,
+) -> list[dict]:
+    _ensure_business_memory_events(db, patient_id)
+    return search_memory_events(db, patient_id, query, top_n=limit)
 
 
 def get_conversation_texts_for_extraction(

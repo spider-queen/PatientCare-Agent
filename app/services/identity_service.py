@@ -9,15 +9,19 @@ from app.services import patient_service
 
 
 def mask_id_number(id_number: Optional[str]) -> Optional[str]:
-    if not id_number or len(id_number) < 8:
+    if not id_number:
         return id_number
-    return f"{id_number[:4]}********{id_number[-4:]}"
+    if len(id_number) <= 4:
+        return "****"
+    return f"****{id_number[-4:]}"
 
 
 def mask_phone(phone: Optional[str]) -> Optional[str]:
-    if not phone or len(phone) < 7:
+    if not phone:
         return phone
-    return f"{phone[:3]}****{phone[-4:]}"
+    if len(phone) <= 4:
+        return "****"
+    return f"****{phone[-4:]}"
 
 
 def verify_patient_identity(
@@ -54,7 +58,6 @@ def verify_patient_identity(
 
 def serialize_patient_identity(patient: Patient) -> dict:
     return {
-        "id": patient.id,
         "patient_code": patient.patient_code,
         "full_name": patient.full_name,
         "gender": patient.gender,

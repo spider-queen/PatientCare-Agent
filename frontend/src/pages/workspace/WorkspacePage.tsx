@@ -7,9 +7,11 @@ import { MessageList } from "../../components/chat/MessageList";
 import { WorkspaceShell } from "../../components/layout/WorkspaceShell";
 import { MemoryEventList } from "../../components/memory/MemoryEventList";
 import { MemoryProfileCard } from "../../components/memory/MemoryProfileCard";
+import { AgentOpsCard } from "../../components/ops/AgentOpsCard";
 import { PatientCard } from "../../components/patient/PatientCard";
 import { PatientLookupCard } from "../../components/patient/PatientLookupCard";
 import { VisitSummaryCard } from "../../components/patient/VisitSummaryCard";
+import { useAgentOpsOverview } from "../../hooks/useAgentOpsOverview";
 import { usePatientOverview } from "../../hooks/usePatientOverview";
 import { queryAgent } from "../../services/agent";
 import type { AgentQueryRequest, ChatMessage } from "../../types/agent";
@@ -35,44 +37,12 @@ function fileToBase64(file: File) {
   });
 }
 
-function buildPrompt(query: string, patientCode: string, patient?: Patient | null) {
-  const trimmed = query.trim();
-  if (!trimmed) {
-    return "";
-  }
-
-  const lines = [
-    "以下是本次请求的已知信息，请基于这些信息继续处理。",
-    `用户原始问题：${trimmed}`
-  ];
-
-  if (patientCode) {
-    lines.push(`当前患者编号：${patientCode}`);
-  }
-  if (patient?.full_name) {
-    lines.push(`当前患者姓名：${patient.full_name}`);
-  }
-  if (patient?.phone) {
-    lines.push(`当前患者手机号：${patient.phone}`);
-  }
-  if (patient?.id_number) {
-    lines.push(`当前患者身份证号：${patient.id_number}`);
-  }
-
-  lines.push("处理要求：");
-  lines.push("1. 如果涉及隐私医疗信息，优先使用已提供身份信息完成校验。");
-  lines.push("2. 如服务端已提供校验结果，请直接继续后续医疗查询。");
-  lines.push("3. 不要误判为用户未提供查询内容。");
-
-  return lines.join("\n");
-}
-
-function buildQuickPrompts(patientCode: string) {
-  const code = patientCode || "该患者";
+function buildQuickPrompts(patient?: Patient | null) {
+  const subject = patient?.full_name || "该患者";
   return [
-    `请总结 ${code} 最近一次心内科复诊的重点。`,
-    `请帮我梳理 ${code} 最近的用药提醒。`,
-    `请结合上传图片判断这是否与 ${code} 最近一次检查有关。`
+    `请总结${subject}最近一次心内科复诊重点。`,
+    `请帮我梳理${subject}最近的用药提醒。`,
+    `请查看${subject}接下来的随访计划。`
   ];
 }
 
@@ -89,30 +59,27 @@ export function WorkspacePage() {
   } = useWorkspaceStore();
   const previousPatientCodeRef = useRef<string | null>(null);
   const [isEventPanelOpen, setIsEventPanelOpen] = useState(false);
-  const quickPrompts = useMemo(() => buildQuickPrompts(patientCode), [patientCode]);
-
   const overviewQuery = usePatientOverview(patientCode);
+  const opsQuery = useAgentOpsOverview();
   const activePatient = overviewQuery.data?.patient;
+  const quickPrompts = useMemo(() => buildQuickPrompts(activePatient), [activePatient]);
 
   useEffect(() => {
-    const firstPrompt = quickPrompts[0];
-    if (!firstPrompt) {
-      return;
-    }
-
     const isInitialLoad = previousPatientCodeRef.current === null;
     const patientChanged = previousPatientCodeRef.current !== patientCode;
     previousPatientCodeRef.current = patientCode;
 
     if (isInitialLoad || patientChanged) {
-      setDraft(firstPrompt);
+      setDraft("");
+      setSelectedImage(null);
     }
-  }, [patientCode, quickPrompts, setDraft]);
+  }, [patientCode, setDraft, setSelectedImage]);
 
   const queryMutation = useMutation({
     mutationFn: async (snapshot: SubmitSnapshot) => {
       const payload: AgentQueryRequest = {
         query: snapshot.prompt,
+        patient_code: patientCode || null,
         images: [],
         debug_planner: false
       };
@@ -144,9 +111,18 @@ export function WorkspacePage() {
         role: "assistant",
         content: data.answer,
         toolOutputs: data.tool_outputs,
+        intent: data.intent,
+        intentConfidence: data.intent_confidence,
+        routeType: data.route_type,
+        routeReason: data.route_reason,
+        cacheHit: data.cache_hit,
+        evidence: data.evidence,
+        riskLevel: data.risk_level,
+        recommendedAction: data.recommended_action,
         status: "done"
       });
       void overviewQuery.refetch();
+      void opsQuery.refetch();
     },
     onError: (error) => {
       addMessage({
@@ -193,6 +169,11 @@ export function WorkspacePage() {
             isLoading={overviewQuery.isLoading}
             errorMessage={errorMessage ? "长期记忆摘要加载失败。" : null}
           />
+          <AgentOpsCard
+            data={opsQuery.data}
+            isLoading={opsQuery.isLoading}
+            errorMessage={opsQuery.error instanceof Error ? opsQuery.error.message : null}
+          />
         </>
       }
     >
@@ -202,7 +183,7 @@ export function WorkspacePage() {
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Medical AI Workspace</p>
               <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
-                基于多模态与记忆增强的患者随访助手
+                医护端诊后随访 Agent 工作台
               </h2>
             </div>
             <div className="rounded-2xl bg-slate-900 px-4 py-3 text-sm text-white">
@@ -210,7 +191,7 @@ export function WorkspacePage() {
                 ? "正在加载患者信息..."
                 : errorMessage
                   ? `患者加载失败：${errorMessage}`
-                  : `当前患者：${patientCode}`}
+                  : `当前患者：${activePatient?.full_name || patientCode || "未选择"}`}
             </div>
           </div>
         </section>
@@ -219,7 +200,11 @@ export function WorkspacePage() {
           <div className="min-h-[360px] overflow-y-auto rounded-[28px]">
             <MessageList
               messages={messages}
-              emptyTitle={patientCode ? `${patientCode} 的独立会话` : "开始新的患者会话"}
+              emptyTitle={
+                activePatient?.full_name
+                  ? `${activePatient.full_name} 的随访会话`
+                  : "开始新的随访会话"
+              }
               emptyDescription={
                 errorMessage
                   ? "患者概览加载失败时，聊天仍可继续，但自动补充的患者上下文会减少。"
@@ -245,7 +230,7 @@ export function WorkspacePage() {
             onFileChange={setSelectedImage}
             onSubmit={() => {
               const rawDraft = draft.trim();
-              const prompt = buildPrompt(rawDraft, patientCode, activePatient);
+              const prompt = rawDraft;
               if (!prompt) {
                 return;
               }

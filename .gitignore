@@ -24,12 +24,17 @@ data/faiss/
 # Frontend
 frontend/node_modules/
 frontend/dist/
+*.tsbuildinfo
 
 # Build and coverage
 build/
 dist/
 coverage/
 htmlcov/
+
+# Runtime logs and local process files
+*.log
+*_pid.txt
 
 # IDE
 .idea/

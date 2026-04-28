@@ -55,3 +55,66 @@ export type PatientOverviewResponse = {
   memory_preference?: MemoryPreference | null;
   recent_memory_events: MemoryEvent[];
 };
+
+export type AgentStageTimingSummary = {
+  patient_resolution_ms: number;
+  memory_context_ms: number;
+  agent_execution_ms: number;
+  persistence_ms: number;
+};
+
+export type AgentOpsSummary = {
+  window_size: number;
+  success_rate: number;
+  avg_total_duration_ms: number;
+  p50_total_duration_ms: number;
+  p95_total_duration_ms: number;
+  fast_path_hit_rate: number;
+  high_frequency_acceleration_rate: number;
+  adaptive_route_hit_rate: number;
+  semantic_cache_hit_rate: number;
+  evidence_cache_invalid_rate: number;
+  agent_loop_fallback_rate: number;
+  avg_latency_saved_ms: number;
+  low_confidence_intent_rate: number;
+  risk_guard_block_count: number;
+  identity_verification_rate: number;
+  memory_fallback_rate: number;
+  memory_refresh_rate: number;
+  tool_success_rate: number;
+  privacy_block_rate: number;
+  risk_escalation_count: number;
+  risk_escalation_rate: number;
+  smalltalk_rate: number;
+  out_of_domain_rate: number;
+  fast_path_avg_duration_ms: number;
+  full_agent_avg_duration_ms: number;
+  avg_tool_count: number;
+  stage_breakdown_avg_ms: AgentStageTimingSummary;
+};
+
+export type AgentRunMetric = {
+  run_id: string;
+  patient_code?: string | null;
+  intent: string;
+  status: string;
+  execution_mode: string;
+  route_type?: string | null;
+  route_reason?: string | null;
+  intent_confidence: number;
+  cache_hit: boolean;
+  latency_saved_ms: number;
+  fast_path: boolean;
+  identity_verified: boolean;
+  used_memory_fallback: boolean;
+  tool_count: number;
+  tool_blocked_count: number;
+  risk_level?: string | null;
+  total_duration_ms: number;
+  created_at: string;
+};
+
+export type AgentOpsOverviewResponse = {
+  summary: AgentOpsSummary;
+  recent_runs: AgentRunMetric[];
+};

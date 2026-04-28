@@ -39,7 +39,7 @@ export function MessageInput({
       <div className="border-b border-slate-100 bg-[linear-gradient(135deg,_rgba(15,118,110,0.1),_rgba(255,255,255,0.96))] px-5 py-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.26em] text-slate-500">Prompt Composer</p>
+            <p className="text-[11px] uppercase tracking-[0.26em] text-slate-500">Clinician Input</p>
             <h3 className="mt-2 text-lg font-semibold text-slate-950">问答输入区</h3>
           </div>
           <div className="flex items-center gap-2">

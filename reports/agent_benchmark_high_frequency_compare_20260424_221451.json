@@ -1,0 +1,328 @@
+{
+  "generated_at": "2026-04-24T22:14:51",
+  "case_set": "high_frequency",
+  "compare_modes": true,
+  "case_count": 6,
+  "success_count": 5,
+  "summary": {
+    "success_rate": 83.3,
+    "high_frequency_acceleration_hit_rate": 60.0,
+    "avg_http_elapsed_ms": 33643,
+    "p50_http_elapsed_ms": 79,
+    "p95_http_elapsed_ms": 97966,
+    "accelerated_avg_http_elapsed_ms": 69,
+    "non_accelerated_avg_http_elapsed_ms": 84004,
+    "acceleration_latency_delta_ms": 83935
+  },
+  "by_category": {
+    "high_frequency": {
+      "case_count": 5,
+      "avg_http_elapsed_ms": 33643,
+      "p95_http_elapsed_ms": 97966,
+      "acceleration_hit_rate": 60.0
+    }
+  },
+  "by_benchmark_mode": {
+    "accelerated": {
+      "case_count": 3,
+      "avg_http_elapsed_ms": 69,
+      "p95_http_elapsed_ms": 79,
+      "acceleration_hit_rate": 100.0
+    },
+    "forced_full_agent": {
+      "case_count": 2,
+      "avg_http_elapsed_ms": 84004,
+      "p95_http_elapsed_ms": 97966,
+      "acceleration_hit_rate": 0.0
+    }
+  },
+  "comparison": {
+    "accelerated_case_count": 3,
+    "forced_full_agent_case_count": 2,
+    "accelerated_avg_http_elapsed_ms": 69,
+    "forced_full_agent_avg_http_elapsed_ms": 84004,
+    "accelerated_p95_http_elapsed_ms": 79,
+    "forced_full_agent_p95_http_elapsed_ms": 97966,
+    "latency_delta_ms": 83935,
+    "latency_reduction_pct": 99.9,
+    "accelerated_hit_rate": 100.0,
+    "per_case": {
+      "patient_profile_standard": {
+        "accelerated_case_count": 1,
+        "forced_full_agent_case_count": 1,
+        "accelerated_avg_http_elapsed_ms": 59,
+        "forced_full_agent_avg_http_elapsed_ms": 97966,
+        "latency_delta_ms": 97907,
+        "latency_reduction_pct": 99.9,
+        "accelerated_hit_rate": 100.0
+      },
+      "medical_case_standard": {
+        "accelerated_case_count": 1,
+        "forced_full_agent_case_count": 1,
+        "accelerated_avg_http_elapsed_ms": 68,
+        "forced_full_agent_avg_http_elapsed_ms": 70043,
+        "latency_delta_ms": 69975,
+        "latency_reduction_pct": 99.9,
+        "accelerated_hit_rate": 100.0
+      }
+    }
+  },
+  "ops_overview": {
+    "summary": {
+      "window_size": 36,
+      "success_rate": 100.0,
+      "avg_total_duration_ms": 64417,
+      "p50_total_duration_ms": 83006,
+      "p95_total_duration_ms": 161233,
+      "fast_path_hit_rate": 41.7,
+      "high_frequency_acceleration_rate": 41.7,
+      "identity_verification_rate": 100.0,
+      "memory_fallback_rate": 0.0,
+      "memory_refresh_rate": 30.6,
+      "tool_success_rate": 100.0,
+      "avg_tool_count": 2,
+      "stage_breakdown_avg_ms": {
+        "patient_resolution_ms": 3,
+        "memory_context_ms": 159,
+        "agent_execution_ms": 64226,
+        "persistence_ms": 15
+      }
+    },
+    "recent_runs": [
+      {
+        "run_id": "agent-3f9703a628e0454894919596ad188b01",
+        "patient_code": "P0001",
+        "intent": "medical_case",
+        "status": "success",
+        "execution_mode": "agent",
+        "fast_path": false,
+        "identity_verified": true,
+        "used_memory_fallback": false,
+        "tool_count": 2,
+        "total_duration_ms": 70024,
+        "created_at": "2026-04-24T14:14:51"
+      },
+      {
+        "run_id": "agent-1a2aefa8fdd648ab8bba39a1d43bcec3",
+        "patient_code": "P0001",
+        "intent": "medical_case",
+        "status": "success",
+        "execution_mode": "fast_path",
+        "fast_path": true,
+        "identity_verified": true,
+        "used_memory_fallback": false,
+        "tool_count": 2,
+        "total_duration_ms": 46,
+        "created_at": "2026-04-24T14:13:41"
+      },
+      {
+        "run_id": "agent-63e6680e898045358904c06880596970",
+        "patient_code": "P0001",
+        "intent": "patient_profile",
+        "status": "success",
+        "execution_mode": "agent",
+        "fast_path": false,
+        "identity_verified": true,
+        "used_memory_fallback": false,
+        "tool_count": 2,
+        "total_duration_ms": 97946,
+        "created_at": "2026-04-24T14:13:41"
+      },
+      {
+        "run_id": "agent-39983ace6f2f4385b6077a51f686fe33",
+        "patient_code": "P0001",
+        "intent": "latest_visit",
+        "status": "success",
+        "execution_mode": "agent",
+        "fast_path": false,
+        "identity_verified": true,
+        "used_memory_fallback": false,
+        "tool_count": 2,
+        "total_duration_ms": 150772,
+        "created_at": "2026-04-24T14:12:34"
+      },
+      {
+        "run_id": "agent-e2ff2ca6822e459889403f1051944f1e",
+        "patient_code": "P0001",
+        "intent": "patient_profile",
+        "status": "success",
+        "execution_mode": "fast_path",
+        "fast_path": true,
+        "identity_verified": true,
+        "used_memory_fallback": false,
+        "tool_count": 2,
+        "total_duration_ms": 30,
+        "created_at": "2026-04-24T14:12:03"
+      },
+      {
+        "run_id": "agent-62f18cd47e2c4841ac356718c8a91776",
+        "patient_code": "P0001",
+        "intent": "latest_visit",
+        "status": "success",
+        "execution_mode": "fast_path",
+        "fast_path": true,
+        "identity_verified": true,
+        "used_memory_fallback": false,
+        "tool_count": 2,
+        "total_duration_ms": 29,
+        "created_at": "2026-04-24T14:10:03"
+      },
+      {
+        "run_id": "agent-04059549cd5e42c0806385311bb30284",
+        "patient_code": "P0001",
+        "intent": "general",
+        "status": "success",
+        "execution_mode": "agent",
+        "fast_path": false,
+        "identity_verified": true,
+        "used_memory_fallback": false,
+        "tool_count": 2,
+        "total_duration_ms": 137030,
+        "created_at": "2026-04-24T14:07:47"
+      },
+      {
+        "run_id": "agent-013b3a2fde1042408f27ff006f3f52f5",
+        "patient_code": "P0001",
+        "intent": "general",
+        "status": "success",
+        "execution_mode": "agent",
+        "fast_path": false,
+        "identity_verified": true,
+        "used_memory_fallback": false,
+        "tool_count": 2,
+        "total_duration_ms": 125325,
+        "created_at": "2026-04-24T14:05:35"
+      },
+      {
+        "run_id": "agent-936e920fd28e4b578a1df9ebac683701",
+        "patient_code": "P0001",
+        "intent": "general",
+        "status": "success",
+        "execution_mode": "agent",
+        "fast_path": false,
+        "identity_verified": true,
+        "used_memory_fallback": false,
+        "tool_count": 2,
+        "total_duration_ms": 83006,
+        "created_at": "2026-04-24T14:03:30"
+      },
+      {
+        "run_id": "agent-b8e520b3ecf94b688eb7177077238fb5",
+        "patient_code": "P0001",
+        "intent": "general",
+        "status": "success",
+        "execution_mode": "agent",
+        "fast_path": false,
+        "identity_verified": true,
+        "used_memory_fallback": false,
+        "tool_count": 2,
+        "total_duration_ms": 102476,
+        "created_at": "2026-04-24T14:02:07"
+      }
+    ]
+  },
+  "results": [
+    {
+      "round": 1,
+      "name": "latest_visit_standard",
+      "category": "high_frequency",
+      "query": "Please summarize the latest visit for patient P0001.",
+      "expected_accelerated": true,
+      "benchmark_mode": "accelerated",
+      "force_full_agent": false,
+      "status": "success",
+      "error": null,
+      "http_elapsed_ms": 79,
+      "reported_total_duration_ms": 29,
+      "execution_mode": "high_frequency_acceleration",
+      "accelerated": true,
+      "tool_count": 2,
+      "run_id": "agent-62f18cd47e2c4841ac356718c8a91776"
+    },
+    {
+      "round": 1,
+      "name": "latest_visit_standard",
+      "category": "high_frequency",
+      "query": "Please summarize the latest visit for patient P0001.",
+      "expected_accelerated": true,
+      "benchmark_mode": "forced_full_agent",
+      "force_full_agent": true,
+      "status": "error",
+      "error": "timed out",
+      "http_elapsed_ms": 120026,
+      "reported_total_duration_ms": null,
+      "execution_mode": "agent",
+      "accelerated": false,
+      "tool_count": 0,
+      "run_id": null
+    },
+    {
+      "round": 1,
+      "name": "patient_profile_standard",
+      "category": "high_frequency",
+      "query": "Please show the patient profile for P0001.",
+      "expected_accelerated": true,
+      "benchmark_mode": "accelerated",
+      "force_full_agent": false,
+      "status": "success",
+      "error": null,
+      "http_elapsed_ms": 59,
+      "reported_total_duration_ms": 30,
+      "execution_mode": "high_frequency_acceleration",
+      "accelerated": true,
+      "tool_count": 2,
+      "run_id": "agent-e2ff2ca6822e459889403f1051944f1e"
+    },
+    {
+      "round": 1,
+      "name": "patient_profile_standard",
+      "category": "high_frequency",
+      "query": "Please show the patient profile for P0001.",
+      "expected_accelerated": true,
+      "benchmark_mode": "forced_full_agent",
+      "force_full_agent": true,
+      "status": "success",
+      "error": null,
+      "http_elapsed_ms": 97966,
+      "reported_total_duration_ms": 97946,
+      "execution_mode": "agent",
+      "accelerated": false,
+      "tool_count": 2,
+      "run_id": "agent-63e6680e898045358904c06880596970"
+    },
+    {
+      "round": 1,
+      "name": "medical_case_standard",
+      "category": "high_frequency",
+      "query": "Please provide the medical case summary for P0001.",
+      "expected_accelerated": true,
+      "benchmark_mode": "accelerated",
+      "force_full_agent": false,
+      "status": "success",
+      "error": null,
+      "http_elapsed_ms": 68,
+      "reported_total_duration_ms": 46,
+      "execution_mode": "high_frequency_acceleration",
+      "accelerated": true,
+      "tool_count": 2,
+      "run_id": "agent-1a2aefa8fdd648ab8bba39a1d43bcec3"
+    },
+    {
+      "round": 1,
+      "name": "medical_case_standard",
+      "category": "high_frequency",
+      "query": "Please provide the medical case summary for P0001.",
+      "expected_accelerated": true,
+      "benchmark_mode": "forced_full_agent",
+      "force_full_agent": true,
+      "status": "success",
+      "error": null,
+      "http_elapsed_ms": 70043,
+      "reported_total_duration_ms": 70024,
+      "execution_mode": "agent",
+      "accelerated": false,
+      "tool_count": 2,
+      "run_id": "agent-3f9703a628e0454894919596ad188b01"
+    }
+  ]
+}

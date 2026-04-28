@@ -21,6 +21,20 @@ function FieldBlock({
   );
 }
 
+function maskPhone(value?: string | null) {
+  if (!value || value.length < 7) {
+    return value;
+  }
+  return `${value.slice(0, 3)}****${value.slice(-4)}`;
+}
+
+function maskIdNumber(value?: string | null) {
+  if (!value || value.length < 8) {
+    return value;
+  }
+  return `${value.slice(0, 4)}********${value.slice(-4)}`;
+}
+
 export function PatientCard({ patient, isLoading = false, errorMessage }: PatientCardProps) {
   if (isLoading) {
     return (
@@ -84,7 +98,8 @@ export function PatientCard({ patient, isLoading = false, errorMessage }: Patien
         </div>
 
         <div className="mt-5 grid gap-3">
-          <FieldBlock label="联系方式" value={patient.phone} />
+          <FieldBlock label="联系方式" value={maskPhone(patient.phone)} />
+          <FieldBlock label="身份证号" value={maskIdNumber(patient.id_number)} />
           <FieldBlock label="出生日期" value={patient.date_of_birth} />
           <FieldBlock label="地址" value={patient.address} />
         </div>
