@@ -109,18 +109,18 @@ PatientCare Agent 主要面向以下医疗服务场景：
 |   |-- db/                 # SQLAlchemy 模型、数据库会话、初始化逻辑
 |   |-- llm/                # Qwen 客户端、Agent 编排、意图识别、领域技能
 |   |-- schemas/            # Pydantic 数据模型
-|   `-- services/           # 业务服务、记忆、缓存、指标和工具函数
+|   |-- services/           # 业务服务、记忆、缓存、指标和工具函数
 |-- data/                   # 本地 SQLite 数据、上传媒体、FAISS 索引文件
 |-- docs/                   # PRD、架构说明、可观测性方案和项目复盘文档
 |-- frontend/               # React + Vite 前端工程
 |   |-- src/
-|   `-- package.json
+|   |-- package.json
 |-- reports/                # Benchmark 输出报告
 |-- scripts/                # 演示数据、本地测试和 benchmark 脚本
 |-- tests/                  # 后端回归测试
 |-- .env.example            # 环境变量模板
 |-- README.md
-`-- requirements.txt
+|-- requirements.txt
 ```
 
 ## 主要接口
@@ -324,7 +324,6 @@ python scripts/test_qwen_agent.py "请分析这张图片中的检查信息" --im
 - 本项目没有实现完整登录系统、RBAC 或生产级医疗权限体系；当前安全治理聚焦于 Agent 工具调用前的访问上下文校验、患者身份核验和敏感字段脱敏。
 - 高风险随访信号采用规则分流，目标是让这类问题绕过普通问答链路并返回保守安全建议，而不是提供诊断结论。
 - 当前语义证据缓存用于本地演示和性能对比，生产环境需要更严格的租户隔离、审计、失效策略和安全评估。
-- 当前版本适合本地演示、Agent Harness 学习和工程作品集展示，生产环境仍需补充正式鉴权、审计、合规、医疗专业审核和高可用部署。
 
 ## 许可证
 
