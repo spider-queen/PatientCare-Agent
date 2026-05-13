@@ -1,4 +1,3 @@
-# 作者：小红书@人间清醒的李某人
 
 from sqlalchemy import text
 

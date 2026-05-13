@@ -327,4 +327,4 @@ python scripts/test_qwen_agent.py "请分析这张图片中的检查信息" --im
 
 ## 许可证
 
-本项目采用 MIT License。你可以自由使用、修改和分发代码，但需保留原始许可证声明。
+本项目采用 MIT License。

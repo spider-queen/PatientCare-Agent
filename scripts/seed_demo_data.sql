@@ -1,4 +1,3 @@
-# 作者：小红书@人间清醒的李某人
 
 INSERT OR IGNORE INTO patients (
   patient_code,
